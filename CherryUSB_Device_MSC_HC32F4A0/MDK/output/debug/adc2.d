@@ -1,0 +1,20 @@
+.\output\debug\adc2.o: ..\source\adc2.c
+.\output\debug\adc2.o: ..\source\adc2.h
+.\output\debug\adc2.o: ..\drivers\hc32_ll_driver\inc\hc32_ll_adc.h
+.\output\debug\adc2.o: ..\drivers\hc32_ll_driver\inc\hc32_ll_def.h
+.\output\debug\adc2.o: D:\3.Software installation path\Keil 5\ARM\ARMCC\Bin\..\include\stddef.h
+.\output\debug\adc2.o: D:\3.Software installation path\Keil 5\ARM\ARMCC\Bin\..\include\stdint.h
+.\output\debug\adc2.o: ..\drivers\cmsis\Device\HDSC\hc32f4xx\Include\hc32f4xx.h
+.\output\debug\adc2.o: ..\drivers\cmsis\Device\HDSC\hc32f4xx\Include\hc32f4a0.h
+.\output\debug\adc2.o: ..\drivers\cmsis\Include\core_cm4.h
+.\output\debug\adc2.o: ..\drivers\cmsis\Include\cmsis_version.h
+.\output\debug\adc2.o: ..\drivers\cmsis\Include\cmsis_compiler.h
+.\output\debug\adc2.o: ..\drivers\cmsis\Include\cmsis_armcc.h
+.\output\debug\adc2.o: ..\drivers\cmsis\Include\mpu_armv7.h
+.\output\debug\adc2.o: ..\drivers\cmsis\Device\HDSC\hc32f4xx\Include\system_hc32f4a0.h
+.\output\debug\adc2.o: ..\drivers\cmsis\Device\HDSC\hc32f4xx\Include\hc32f4xx.h
+.\output\debug\adc2.o: ..\source\hc32f4xx_conf.h
+.\output\debug\adc2.o: ..\drivers\hc32_ll_driver\inc\hc32_ll_clk.h
+.\output\debug\adc2.o: ..\drivers\hc32_ll_driver\inc\hc32_ll_fcg.h
+.\output\debug\adc2.o: ..\drivers\hc32_ll_driver\inc\hc32_ll_aos.h
+.\output\debug\adc2.o: ..\drivers\hc32_ll_driver\inc\hc32_ll_gpio.h

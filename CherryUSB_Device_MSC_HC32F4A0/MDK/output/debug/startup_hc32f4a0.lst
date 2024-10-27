@@ -1,0 +1,3112 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;/**
+    2 00000000         ; ******************************************************
+                       ************************
+    3 00000000         ;  @file  startup_hc32f4a0.s
+    4 00000000         ;  @brief Startup for MDK.
+    5 00000000         ; verbatim
+    6 00000000         ;  Change Logs:
+    7 00000000         ;  Date             Author          Notes
+    8 00000000         ;  2022-03-31       CDT             First version
+    9 00000000         ; endverbatim
+   10 00000000         ; ******************************************************
+                       ***********************
+   11 00000000         ; * Copyright (C) 2022-2023, Xiaohua Semiconductor Co., 
+                       Ltd. All rights reserved.
+   12 00000000         ; *
+   13 00000000         ; * This software component is licensed by XHSC under BS
+                       D 3-Clause license
+   14 00000000         ; * (the "License"); You may not use this file except in
+                        compliance with the
+   15 00000000         ; * License. You may obtain a copy of the License at:
+   16 00000000         ; *                    opensource.org/licenses/BSD-3-Cla
+                       use
+   17 00000000         ; *
+   18 00000000         ; ******************************************************
+                       ************************
+   19 00000000         ; */
+   20 00000000         
+   21 00000000         ; Stack Configuration
+   22 00000000         ; Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
+   23 00000000         
+   24 00000000 00002000 
+                       Stack_Size
+                               EQU              0x00002000
+   25 00000000         
+   26 00000000                 AREA             STACK, NOINIT, READWRITE, ALIGN
+=3
+   27 00000000         Stack_Mem
+                               SPACE            Stack_Size
+   28 00002000         __initial_sp
+   29 00002000         
+   30 00002000         
+   31 00002000         ; Heap Configuration
+   32 00002000         ;  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
+   33 00002000         
+   34 00002000 00002000 
+                       Heap_Size
+                               EQU              0x00002000
+   35 00002000         
+   36 00002000                 AREA             HEAP, NOINIT, READWRITE, ALIGN=
+3
+   37 00000000         __heap_base
+   38 00000000         Heap_Mem
+                               SPACE            Heap_Size
+   39 00002000         __heap_limit
+   40 00002000         
+   41 00002000                 PRESERVE8
+   42 00002000                 THUMB
+   43 00002000         
+   44 00002000         ; Vector Table Mapped to Address 0 at Reset
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   45 00002000         
+   46 00002000                 AREA             RESET, DATA, READONLY
+   47 00000000                 EXPORT           __Vectors
+   48 00000000                 EXPORT           __Vectors_End
+   49 00000000                 EXPORT           __Vectors_Size
+   50 00000000         
+   51 00000000 00000000 
+                       __Vectors
+                               DCD              __initial_sp ; Top of Stack
+   52 00000004 00000000        DCD              Reset_Handler ; Reset Handler
+   53 00000008 00000000        DCD              NMI_Handler ; NMI Handler
+   54 0000000C 00000000        DCD              HardFault_Handler ; Hard Fault 
+                                                            Handler
+   55 00000010 00000000        DCD              MemManage_Handler 
+                                                            ; MPU Fault Handler
+                                                            
+   56 00000014 00000000        DCD              BusFault_Handler 
+                                                            ; Bus Fault Handler
+                                                            
+   57 00000018 00000000        DCD              UsageFault_Handler ; Usage Faul
+                                                            t Handler
+   58 0000001C 00000000        DCD              0           ; Reserved
+   59 00000020 00000000        DCD              0           ; Reserved
+   60 00000024 00000000        DCD              0           ; Reserved
+   61 00000028 00000000        DCD              0           ; Reserved
+   62 0000002C 00000000        DCD              SVC_Handler ; SVCall Handler
+   63 00000030 00000000        DCD              DebugMon_Handler ; Debug Monito
+                                                            r Handler
+   64 00000034 00000000        DCD              0           ; Reserved
+   65 00000038 00000000        DCD              PendSV_Handler ; PendSV Handler
+                                                            
+   66 0000003C 00000000        DCD              SysTick_Handler 
+                                                            ; SysTick Handler
+   67 00000040         
+   68 00000040         ; Peripheral Interrupts
+   69 00000040 00000000        DCD              IRQ000_Handler
+   70 00000044 00000000        DCD              IRQ001_Handler
+   71 00000048 00000000        DCD              IRQ002_Handler
+   72 0000004C 00000000        DCD              IRQ003_Handler
+   73 00000050 00000000        DCD              IRQ004_Handler
+   74 00000054 00000000        DCD              IRQ005_Handler
+   75 00000058 00000000        DCD              IRQ006_Handler
+   76 0000005C 00000000        DCD              IRQ007_Handler
+   77 00000060 00000000        DCD              IRQ008_Handler
+   78 00000064 00000000        DCD              IRQ009_Handler
+   79 00000068 00000000        DCD              IRQ010_Handler
+   80 0000006C 00000000        DCD              IRQ011_Handler
+   81 00000070 00000000        DCD              IRQ012_Handler
+   82 00000074 00000000        DCD              IRQ013_Handler
+   83 00000078 00000000        DCD              IRQ014_Handler
+   84 0000007C 00000000        DCD              IRQ015_Handler
+   85 00000080 00000000        DCD              IRQ016_Handler
+   86 00000084 00000000        DCD              IRQ017_Handler
+   87 00000088 00000000        DCD              IRQ018_Handler
+   88 0000008C 00000000        DCD              IRQ019_Handler
+   89 00000090 00000000        DCD              IRQ020_Handler
+   90 00000094 00000000        DCD              IRQ021_Handler
+   91 00000098 00000000        DCD              IRQ022_Handler
+   92 0000009C 00000000        DCD              IRQ023_Handler
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   93 000000A0 00000000        DCD              IRQ024_Handler
+   94 000000A4 00000000        DCD              IRQ025_Handler
+   95 000000A8 00000000        DCD              IRQ026_Handler
+   96 000000AC 00000000        DCD              IRQ027_Handler
+   97 000000B0 00000000        DCD              IRQ028_Handler
+   98 000000B4 00000000        DCD              IRQ029_Handler
+   99 000000B8 00000000        DCD              IRQ030_Handler
+  100 000000BC 00000000        DCD              IRQ031_Handler
+  101 000000C0 00000000        DCD              IRQ032_Handler
+  102 000000C4 00000000        DCD              IRQ033_Handler
+  103 000000C8 00000000        DCD              IRQ034_Handler
+  104 000000CC 00000000        DCD              IRQ035_Handler
+  105 000000D0 00000000        DCD              IRQ036_Handler
+  106 000000D4 00000000        DCD              IRQ037_Handler
+  107 000000D8 00000000        DCD              IRQ038_Handler
+  108 000000DC 00000000        DCD              IRQ039_Handler
+  109 000000E0 00000000        DCD              IRQ040_Handler
+  110 000000E4 00000000        DCD              IRQ041_Handler
+  111 000000E8 00000000        DCD              IRQ042_Handler
+  112 000000EC 00000000        DCD              IRQ043_Handler
+  113 000000F0 00000000        DCD              IRQ044_Handler
+  114 000000F4 00000000        DCD              IRQ045_Handler
+  115 000000F8 00000000        DCD              IRQ046_Handler
+  116 000000FC 00000000        DCD              IRQ047_Handler
+  117 00000100 00000000        DCD              IRQ048_Handler
+  118 00000104 00000000        DCD              IRQ049_Handler
+  119 00000108 00000000        DCD              IRQ050_Handler
+  120 0000010C 00000000        DCD              IRQ051_Handler
+  121 00000110 00000000        DCD              IRQ052_Handler
+  122 00000114 00000000        DCD              IRQ053_Handler
+  123 00000118 00000000        DCD              IRQ054_Handler
+  124 0000011C 00000000        DCD              IRQ055_Handler
+  125 00000120 00000000        DCD              IRQ056_Handler
+  126 00000124 00000000        DCD              IRQ057_Handler
+  127 00000128 00000000        DCD              IRQ058_Handler
+  128 0000012C 00000000        DCD              IRQ059_Handler
+  129 00000130 00000000        DCD              IRQ060_Handler
+  130 00000134 00000000        DCD              IRQ061_Handler
+  131 00000138 00000000        DCD              IRQ062_Handler
+  132 0000013C 00000000        DCD              IRQ063_Handler
+  133 00000140 00000000        DCD              IRQ064_Handler
+  134 00000144 00000000        DCD              IRQ065_Handler
+  135 00000148 00000000        DCD              IRQ066_Handler
+  136 0000014C 00000000        DCD              IRQ067_Handler
+  137 00000150 00000000        DCD              IRQ068_Handler
+  138 00000154 00000000        DCD              IRQ069_Handler
+  139 00000158 00000000        DCD              IRQ070_Handler
+  140 0000015C 00000000        DCD              IRQ071_Handler
+  141 00000160 00000000        DCD              IRQ072_Handler
+  142 00000164 00000000        DCD              IRQ073_Handler
+  143 00000168 00000000        DCD              IRQ074_Handler
+  144 0000016C 00000000        DCD              IRQ075_Handler
+  145 00000170 00000000        DCD              IRQ076_Handler
+  146 00000174 00000000        DCD              IRQ077_Handler
+  147 00000178 00000000        DCD              IRQ078_Handler
+  148 0000017C 00000000        DCD              IRQ079_Handler
+  149 00000180 00000000        DCD              IRQ080_Handler
+  150 00000184 00000000        DCD              IRQ081_Handler
+  151 00000188 00000000        DCD              IRQ082_Handler
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+  152 0000018C 00000000        DCD              IRQ083_Handler
+  153 00000190 00000000        DCD              IRQ084_Handler
+  154 00000194 00000000        DCD              IRQ085_Handler
+  155 00000198 00000000        DCD              IRQ086_Handler
+  156 0000019C 00000000        DCD              IRQ087_Handler
+  157 000001A0 00000000        DCD              IRQ088_Handler
+  158 000001A4 00000000        DCD              IRQ089_Handler
+  159 000001A8 00000000        DCD              IRQ090_Handler
+  160 000001AC 00000000        DCD              IRQ091_Handler
+  161 000001B0 00000000        DCD              IRQ092_Handler
+  162 000001B4 00000000        DCD              IRQ093_Handler
+  163 000001B8 00000000        DCD              IRQ094_Handler
+  164 000001BC 00000000        DCD              IRQ095_Handler
+  165 000001C0 00000000        DCD              IRQ096_Handler
+  166 000001C4 00000000        DCD              IRQ097_Handler
+  167 000001C8 00000000        DCD              IRQ098_Handler
+  168 000001CC 00000000        DCD              IRQ099_Handler
+  169 000001D0 00000000        DCD              IRQ100_Handler
+  170 000001D4 00000000        DCD              IRQ101_Handler
+  171 000001D8 00000000        DCD              IRQ102_Handler
+  172 000001DC 00000000        DCD              IRQ103_Handler
+  173 000001E0 00000000        DCD              IRQ104_Handler
+  174 000001E4 00000000        DCD              IRQ105_Handler
+  175 000001E8 00000000        DCD              IRQ106_Handler
+  176 000001EC 00000000        DCD              IRQ107_Handler
+  177 000001F0 00000000        DCD              IRQ108_Handler
+  178 000001F4 00000000        DCD              IRQ109_Handler
+  179 000001F8 00000000        DCD              IRQ110_Handler
+  180 000001FC 00000000        DCD              IRQ111_Handler
+  181 00000200 00000000        DCD              IRQ112_Handler
+  182 00000204 00000000        DCD              IRQ113_Handler
+  183 00000208 00000000        DCD              IRQ114_Handler
+  184 0000020C 00000000        DCD              IRQ115_Handler
+  185 00000210 00000000        DCD              IRQ116_Handler
+  186 00000214 00000000        DCD              IRQ117_Handler
+  187 00000218 00000000        DCD              IRQ118_Handler
+  188 0000021C 00000000        DCD              IRQ119_Handler
+  189 00000220 00000000        DCD              IRQ120_Handler
+  190 00000224 00000000        DCD              IRQ121_Handler
+  191 00000228 00000000        DCD              IRQ122_Handler
+  192 0000022C 00000000        DCD              IRQ123_Handler
+  193 00000230 00000000        DCD              IRQ124_Handler
+  194 00000234 00000000        DCD              IRQ125_Handler
+  195 00000238 00000000        DCD              IRQ126_Handler
+  196 0000023C 00000000        DCD              IRQ127_Handler
+  197 00000240 00000000        DCD              IRQ128_Handler
+  198 00000244 00000000        DCD              IRQ129_Handler
+  199 00000248 00000000        DCD              IRQ130_Handler
+  200 0000024C 00000000        DCD              IRQ131_Handler
+  201 00000250 00000000        DCD              IRQ132_Handler
+  202 00000254 00000000        DCD              IRQ133_Handler
+  203 00000258 00000000        DCD              IRQ134_Handler
+  204 0000025C 00000000        DCD              IRQ135_Handler
+  205 00000260 00000000        DCD              IRQ136_Handler
+  206 00000264 00000000        DCD              IRQ137_Handler
+  207 00000268 00000000        DCD              IRQ138_Handler
+  208 0000026C 00000000        DCD              IRQ139_Handler
+  209 00000270 00000000        DCD              IRQ140_Handler
+  210 00000274 00000000        DCD              IRQ141_Handler
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+  211 00000278 00000000        DCD              IRQ142_Handler
+  212 0000027C 00000000        DCD              IRQ143_Handler
+  213 00000280         
+  214 00000280         __Vectors_End
+  215 00000280         
+  216 00000280 00000280 
+                       __Vectors_Size
+                               EQU              __Vectors_End - __Vectors
+  217 00000280         
+  218 00000280                 AREA             |.text|, CODE, READONLY
+  219 00000000         
+  220 00000000         ; Reset Handler
+  221 00000000         
+  222 00000000         Reset_Handler
+                               PROC
+  223 00000000                 EXPORT           Reset_Handler             [WEAK
+]
+  224 00000000                 IMPORT           SystemInit
+  225 00000000                 IMPORT           __main
+  226 00000000         
+  227 00000000 4806            LDR              R0, =SystemInit
+  228 00000002 4780            BLX              R0
+  229 00000004 4806            LDR              R0, =__main
+  230 00000006 4700            BX               R0
+  231 00000008                 ENDP
+  232 00000008         
+  233 00000008         ; Dummy Exception Handlers (infinite loops which can be 
+                       modified)
+  234 00000008         
+  235 00000008         NMI_Handler
+                               PROC
+  236 00000008                 EXPORT           NMI_Handler               [WEAK
+]
+  237 00000008 E7FE            B                .
+  238 0000000A                 ENDP
+  240 0000000A         HardFault_Handler
+                               PROC
+  241 0000000A                 EXPORT           HardFault_Handler         [WEAK
+]
+  242 0000000A E7FE            B                .
+  243 0000000C                 ENDP
+  245 0000000C         MemManage_Handler
+                               PROC
+  246 0000000C                 EXPORT           MemManage_Handler         [WEAK
+]
+  247 0000000C E7FE            B                .
+  248 0000000E                 ENDP
+  250 0000000E         BusFault_Handler
+                               PROC
+  251 0000000E                 EXPORT           BusFault_Handler          [WEAK
+]
+  252 0000000E E7FE            B                .
+  253 00000010                 ENDP
+  255 00000010         UsageFault_Handler
+                               PROC
+  256 00000010                 EXPORT           UsageFault_Handler        [WEAK
+]
+  257 00000010 E7FE            B                .
+  258 00000012                 ENDP
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+  259 00000012         SVC_Handler
+                               PROC
+  260 00000012                 EXPORT           SVC_Handler               [WEAK
+]
+  261 00000012 E7FE            B                .
+  262 00000014                 ENDP
+  264 00000014         DebugMon_Handler
+                               PROC
+  265 00000014                 EXPORT           DebugMon_Handler          [WEAK
+]
+  266 00000014 E7FE            B                .
+  267 00000016                 ENDP
+  268 00000016         PendSV_Handler
+                               PROC
+  269 00000016                 EXPORT           PendSV_Handler            [WEAK
+]
+  270 00000016 E7FE            B                .
+  271 00000018                 ENDP
+  272 00000018         SysTick_Handler
+                               PROC
+  273 00000018                 EXPORT           SysTick_Handler           [WEAK
+]
+  274 00000018 E7FE            B                .
+  275 0000001A                 ENDP
+  276 0000001A         
+  277 0000001A         Default_Handler
+                               PROC
+  278 0000001A                 EXPORT           IRQ000_Handler            [WEAK
+]
+  279 0000001A                 EXPORT           IRQ001_Handler            [WEAK
+]
+  280 0000001A                 EXPORT           IRQ002_Handler            [WEAK
+]
+  281 0000001A                 EXPORT           IRQ003_Handler            [WEAK
+]
+  282 0000001A                 EXPORT           IRQ004_Handler            [WEAK
+]
+  283 0000001A                 EXPORT           IRQ005_Handler            [WEAK
+]
+  284 0000001A                 EXPORT           IRQ006_Handler            [WEAK
+]
+  285 0000001A                 EXPORT           IRQ007_Handler            [WEAK
+]
+  286 0000001A                 EXPORT           IRQ008_Handler            [WEAK
+]
+  287 0000001A                 EXPORT           IRQ009_Handler            [WEAK
+]
+  288 0000001A                 EXPORT           IRQ010_Handler            [WEAK
+]
+  289 0000001A                 EXPORT           IRQ011_Handler            [WEAK
+]
+  290 0000001A                 EXPORT           IRQ012_Handler            [WEAK
+]
+  291 0000001A                 EXPORT           IRQ013_Handler            [WEAK
+]
+  292 0000001A                 EXPORT           IRQ014_Handler            [WEAK
+]
+  293 0000001A                 EXPORT           IRQ015_Handler            [WEAK
+]
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+  294 0000001A                 EXPORT           IRQ016_Handler            [WEAK
+]
+  295 0000001A                 EXPORT           IRQ017_Handler            [WEAK
+]
+  296 0000001A                 EXPORT           IRQ018_Handler            [WEAK
+]
+  297 0000001A                 EXPORT           IRQ019_Handler            [WEAK
+]
+  298 0000001A                 EXPORT           IRQ020_Handler            [WEAK
+]
+  299 0000001A                 EXPORT           IRQ021_Handler            [WEAK
+]
+  300 0000001A                 EXPORT           IRQ022_Handler            [WEAK
+]
+  301 0000001A                 EXPORT           IRQ023_Handler            [WEAK
+]
+  302 0000001A                 EXPORT           IRQ024_Handler            [WEAK
+]
+  303 0000001A                 EXPORT           IRQ025_Handler            [WEAK
+]
+  304 0000001A                 EXPORT           IRQ026_Handler            [WEAK
+]
+  305 0000001A                 EXPORT           IRQ027_Handler            [WEAK
+]
+  306 0000001A                 EXPORT           IRQ028_Handler            [WEAK
+]
+  307 0000001A                 EXPORT           IRQ029_Handler            [WEAK
+]
+  308 0000001A                 EXPORT           IRQ030_Handler            [WEAK
+]
+  309 0000001A                 EXPORT           IRQ031_Handler            [WEAK
+]
+  310 0000001A                 EXPORT           IRQ032_Handler            [WEAK
+]
+  311 0000001A                 EXPORT           IRQ033_Handler            [WEAK
+]
+  312 0000001A                 EXPORT           IRQ034_Handler            [WEAK
+]
+  313 0000001A                 EXPORT           IRQ035_Handler            [WEAK
+]
+  314 0000001A                 EXPORT           IRQ036_Handler            [WEAK
+]
+  315 0000001A                 EXPORT           IRQ037_Handler            [WEAK
+]
+  316 0000001A                 EXPORT           IRQ038_Handler            [WEAK
+]
+  317 0000001A                 EXPORT           IRQ039_Handler            [WEAK
+]
+  318 0000001A                 EXPORT           IRQ040_Handler            [WEAK
+]
+  319 0000001A                 EXPORT           IRQ041_Handler            [WEAK
+]
+  320 0000001A                 EXPORT           IRQ042_Handler            [WEAK
+]
+  321 0000001A                 EXPORT           IRQ043_Handler            [WEAK
+]
+  322 0000001A                 EXPORT           IRQ044_Handler            [WEAK
+]
+  323 0000001A                 EXPORT           IRQ045_Handler            [WEAK
+
+
+
+ARM Macro Assembler    Page 8 
+
+
+]
+  324 0000001A                 EXPORT           IRQ046_Handler            [WEAK
+]
+  325 0000001A                 EXPORT           IRQ047_Handler            [WEAK
+]
+  326 0000001A                 EXPORT           IRQ048_Handler            [WEAK
+]
+  327 0000001A                 EXPORT           IRQ049_Handler            [WEAK
+]
+  328 0000001A                 EXPORT           IRQ050_Handler            [WEAK
+]
+  329 0000001A                 EXPORT           IRQ051_Handler            [WEAK
+]
+  330 0000001A                 EXPORT           IRQ052_Handler            [WEAK
+]
+  331 0000001A                 EXPORT           IRQ053_Handler            [WEAK
+]
+  332 0000001A                 EXPORT           IRQ054_Handler            [WEAK
+]
+  333 0000001A                 EXPORT           IRQ055_Handler            [WEAK
+]
+  334 0000001A                 EXPORT           IRQ056_Handler            [WEAK
+]
+  335 0000001A                 EXPORT           IRQ057_Handler            [WEAK
+]
+  336 0000001A                 EXPORT           IRQ058_Handler            [WEAK
+]
+  337 0000001A                 EXPORT           IRQ059_Handler            [WEAK
+]
+  338 0000001A                 EXPORT           IRQ060_Handler            [WEAK
+]
+  339 0000001A                 EXPORT           IRQ061_Handler            [WEAK
+]
+  340 0000001A                 EXPORT           IRQ062_Handler            [WEAK
+]
+  341 0000001A                 EXPORT           IRQ063_Handler            [WEAK
+]
+  342 0000001A                 EXPORT           IRQ064_Handler            [WEAK
+]
+  343 0000001A                 EXPORT           IRQ065_Handler            [WEAK
+]
+  344 0000001A                 EXPORT           IRQ066_Handler            [WEAK
+]
+  345 0000001A                 EXPORT           IRQ067_Handler            [WEAK
+]
+  346 0000001A                 EXPORT           IRQ068_Handler            [WEAK
+]
+  347 0000001A                 EXPORT           IRQ069_Handler            [WEAK
+]
+  348 0000001A                 EXPORT           IRQ070_Handler            [WEAK
+]
+  349 0000001A                 EXPORT           IRQ071_Handler            [WEAK
+]
+  350 0000001A                 EXPORT           IRQ072_Handler            [WEAK
+]
+  351 0000001A                 EXPORT           IRQ073_Handler            [WEAK
+]
+  352 0000001A                 EXPORT           IRQ074_Handler            [WEAK
+]
+
+
+
+ARM Macro Assembler    Page 9 
+
+
+  353 0000001A                 EXPORT           IRQ075_Handler            [WEAK
+]
+  354 0000001A                 EXPORT           IRQ076_Handler            [WEAK
+]
+  355 0000001A                 EXPORT           IRQ077_Handler            [WEAK
+]
+  356 0000001A                 EXPORT           IRQ078_Handler            [WEAK
+]
+  357 0000001A                 EXPORT           IRQ079_Handler            [WEAK
+]
+  358 0000001A                 EXPORT           IRQ080_Handler            [WEAK
+]
+  359 0000001A                 EXPORT           IRQ081_Handler            [WEAK
+]
+  360 0000001A                 EXPORT           IRQ082_Handler            [WEAK
+]
+  361 0000001A                 EXPORT           IRQ083_Handler            [WEAK
+]
+  362 0000001A                 EXPORT           IRQ084_Handler            [WEAK
+]
+  363 0000001A                 EXPORT           IRQ085_Handler            [WEAK
+]
+  364 0000001A                 EXPORT           IRQ086_Handler            [WEAK
+]
+  365 0000001A                 EXPORT           IRQ087_Handler            [WEAK
+]
+  366 0000001A                 EXPORT           IRQ088_Handler            [WEAK
+]
+  367 0000001A                 EXPORT           IRQ089_Handler            [WEAK
+]
+  368 0000001A                 EXPORT           IRQ090_Handler            [WEAK
+]
+  369 0000001A                 EXPORT           IRQ091_Handler            [WEAK
+]
+  370 0000001A                 EXPORT           IRQ092_Handler            [WEAK
+]
+  371 0000001A                 EXPORT           IRQ093_Handler            [WEAK
+]
+  372 0000001A                 EXPORT           IRQ094_Handler            [WEAK
+]
+  373 0000001A                 EXPORT           IRQ095_Handler            [WEAK
+]
+  374 0000001A                 EXPORT           IRQ096_Handler            [WEAK
+]
+  375 0000001A                 EXPORT           IRQ097_Handler            [WEAK
+]
+  376 0000001A                 EXPORT           IRQ098_Handler            [WEAK
+]
+  377 0000001A                 EXPORT           IRQ099_Handler            [WEAK
+]
+  378 0000001A                 EXPORT           IRQ100_Handler            [WEAK
+]
+  379 0000001A                 EXPORT           IRQ101_Handler            [WEAK
+]
+  380 0000001A                 EXPORT           IRQ102_Handler            [WEAK
+]
+  381 0000001A                 EXPORT           IRQ103_Handler            [WEAK
+]
+  382 0000001A                 EXPORT           IRQ104_Handler            [WEAK
+
+
+
+ARM Macro Assembler    Page 10 
+
+
+]
+  383 0000001A                 EXPORT           IRQ105_Handler            [WEAK
+]
+  384 0000001A                 EXPORT           IRQ106_Handler            [WEAK
+]
+  385 0000001A                 EXPORT           IRQ107_Handler            [WEAK
+]
+  386 0000001A                 EXPORT           IRQ108_Handler            [WEAK
+]
+  387 0000001A                 EXPORT           IRQ109_Handler            [WEAK
+]
+  388 0000001A                 EXPORT           IRQ110_Handler            [WEAK
+]
+  389 0000001A                 EXPORT           IRQ111_Handler            [WEAK
+]
+  390 0000001A                 EXPORT           IRQ112_Handler            [WEAK
+]
+  391 0000001A                 EXPORT           IRQ113_Handler            [WEAK
+]
+  392 0000001A                 EXPORT           IRQ114_Handler            [WEAK
+]
+  393 0000001A                 EXPORT           IRQ115_Handler            [WEAK
+]
+  394 0000001A                 EXPORT           IRQ116_Handler            [WEAK
+]
+  395 0000001A                 EXPORT           IRQ117_Handler            [WEAK
+]
+  396 0000001A                 EXPORT           IRQ118_Handler            [WEAK
+]
+  397 0000001A                 EXPORT           IRQ119_Handler            [WEAK
+]
+  398 0000001A                 EXPORT           IRQ120_Handler            [WEAK
+]
+  399 0000001A                 EXPORT           IRQ121_Handler            [WEAK
+]
+  400 0000001A                 EXPORT           IRQ122_Handler            [WEAK
+]
+  401 0000001A                 EXPORT           IRQ123_Handler            [WEAK
+]
+  402 0000001A                 EXPORT           IRQ124_Handler            [WEAK
+]
+  403 0000001A                 EXPORT           IRQ125_Handler            [WEAK
+]
+  404 0000001A                 EXPORT           IRQ126_Handler            [WEAK
+]
+  405 0000001A                 EXPORT           IRQ127_Handler            [WEAK
+]
+  406 0000001A                 EXPORT           IRQ128_Handler            [WEAK
+]
+  407 0000001A                 EXPORT           IRQ129_Handler            [WEAK
+]
+  408 0000001A                 EXPORT           IRQ130_Handler            [WEAK
+]
+  409 0000001A                 EXPORT           IRQ131_Handler            [WEAK
+]
+  410 0000001A                 EXPORT           IRQ132_Handler            [WEAK
+]
+  411 0000001A                 EXPORT           IRQ133_Handler            [WEAK
+]
+
+
+
+ARM Macro Assembler    Page 11 
+
+
+  412 0000001A                 EXPORT           IRQ134_Handler            [WEAK
+]
+  413 0000001A                 EXPORT           IRQ135_Handler            [WEAK
+]
+  414 0000001A                 EXPORT           IRQ136_Handler            [WEAK
+]
+  415 0000001A                 EXPORT           IRQ137_Handler            [WEAK
+]
+  416 0000001A                 EXPORT           IRQ138_Handler            [WEAK
+]
+  417 0000001A                 EXPORT           IRQ139_Handler            [WEAK
+]
+  418 0000001A                 EXPORT           IRQ140_Handler            [WEAK
+]
+  419 0000001A                 EXPORT           IRQ141_Handler            [WEAK
+]
+  420 0000001A                 EXPORT           IRQ142_Handler            [WEAK
+]
+  421 0000001A                 EXPORT           IRQ143_Handler            [WEAK
+]
+  422 0000001A         
+  423 0000001A         IRQ000_Handler
+  424 0000001A         IRQ001_Handler
+  425 0000001A         IRQ002_Handler
+  426 0000001A         IRQ003_Handler
+  427 0000001A         IRQ004_Handler
+  428 0000001A         IRQ005_Handler
+  429 0000001A         IRQ006_Handler
+  430 0000001A         IRQ007_Handler
+  431 0000001A         IRQ008_Handler
+  432 0000001A         IRQ009_Handler
+  433 0000001A         IRQ010_Handler
+  434 0000001A         IRQ011_Handler
+  435 0000001A         IRQ012_Handler
+  436 0000001A         IRQ013_Handler
+  437 0000001A         IRQ014_Handler
+  438 0000001A         IRQ015_Handler
+  439 0000001A         IRQ016_Handler
+  440 0000001A         IRQ017_Handler
+  441 0000001A         IRQ018_Handler
+  442 0000001A         IRQ019_Handler
+  443 0000001A         IRQ020_Handler
+  444 0000001A         IRQ021_Handler
+  445 0000001A         IRQ022_Handler
+  446 0000001A         IRQ023_Handler
+  447 0000001A         IRQ024_Handler
+  448 0000001A         IRQ025_Handler
+  449 0000001A         IRQ026_Handler
+  450 0000001A         IRQ027_Handler
+  451 0000001A         IRQ028_Handler
+  452 0000001A         IRQ029_Handler
+  453 0000001A         IRQ030_Handler
+  454 0000001A         IRQ031_Handler
+  455 0000001A         IRQ032_Handler
+  456 0000001A         IRQ033_Handler
+  457 0000001A         IRQ034_Handler
+  458 0000001A         IRQ035_Handler
+  459 0000001A         IRQ036_Handler
+  460 0000001A         IRQ037_Handler
+
+
+
+ARM Macro Assembler    Page 12 
+
+
+  461 0000001A         IRQ038_Handler
+  462 0000001A         IRQ039_Handler
+  463 0000001A         IRQ040_Handler
+  464 0000001A         IRQ041_Handler
+  465 0000001A         IRQ042_Handler
+  466 0000001A         IRQ043_Handler
+  467 0000001A         IRQ044_Handler
+  468 0000001A         IRQ045_Handler
+  469 0000001A         IRQ046_Handler
+  470 0000001A         IRQ047_Handler
+  471 0000001A         IRQ048_Handler
+  472 0000001A         IRQ049_Handler
+  473 0000001A         IRQ050_Handler
+  474 0000001A         IRQ051_Handler
+  475 0000001A         IRQ052_Handler
+  476 0000001A         IRQ053_Handler
+  477 0000001A         IRQ054_Handler
+  478 0000001A         IRQ055_Handler
+  479 0000001A         IRQ056_Handler
+  480 0000001A         IRQ057_Handler
+  481 0000001A         IRQ058_Handler
+  482 0000001A         IRQ059_Handler
+  483 0000001A         IRQ060_Handler
+  484 0000001A         IRQ061_Handler
+  485 0000001A         IRQ062_Handler
+  486 0000001A         IRQ063_Handler
+  487 0000001A         IRQ064_Handler
+  488 0000001A         IRQ065_Handler
+  489 0000001A         IRQ066_Handler
+  490 0000001A         IRQ067_Handler
+  491 0000001A         IRQ068_Handler
+  492 0000001A         IRQ069_Handler
+  493 0000001A         IRQ070_Handler
+  494 0000001A         IRQ071_Handler
+  495 0000001A         IRQ072_Handler
+  496 0000001A         IRQ073_Handler
+  497 0000001A         IRQ074_Handler
+  498 0000001A         IRQ075_Handler
+  499 0000001A         IRQ076_Handler
+  500 0000001A         IRQ077_Handler
+  501 0000001A         IRQ078_Handler
+  502 0000001A         IRQ079_Handler
+  503 0000001A         IRQ080_Handler
+  504 0000001A         IRQ081_Handler
+  505 0000001A         IRQ082_Handler
+  506 0000001A         IRQ083_Handler
+  507 0000001A         IRQ084_Handler
+  508 0000001A         IRQ085_Handler
+  509 0000001A         IRQ086_Handler
+  510 0000001A         IRQ087_Handler
+  511 0000001A         IRQ088_Handler
+  512 0000001A         IRQ089_Handler
+  513 0000001A         IRQ090_Handler
+  514 0000001A         IRQ091_Handler
+  515 0000001A         IRQ092_Handler
+  516 0000001A         IRQ093_Handler
+  517 0000001A         IRQ094_Handler
+  518 0000001A         IRQ095_Handler
+  519 0000001A         IRQ096_Handler
+
+
+
+ARM Macro Assembler    Page 13 
+
+
+  520 0000001A         IRQ097_Handler
+  521 0000001A         IRQ098_Handler
+  522 0000001A         IRQ099_Handler
+  523 0000001A         IRQ100_Handler
+  524 0000001A         IRQ101_Handler
+  525 0000001A         IRQ102_Handler
+  526 0000001A         IRQ103_Handler
+  527 0000001A         IRQ104_Handler
+  528 0000001A         IRQ105_Handler
+  529 0000001A         IRQ106_Handler
+  530 0000001A         IRQ107_Handler
+  531 0000001A         IRQ108_Handler
+  532 0000001A         IRQ109_Handler
+  533 0000001A         IRQ110_Handler
+  534 0000001A         IRQ111_Handler
+  535 0000001A         IRQ112_Handler
+  536 0000001A         IRQ113_Handler
+  537 0000001A         IRQ114_Handler
+  538 0000001A         IRQ115_Handler
+  539 0000001A         IRQ116_Handler
+  540 0000001A         IRQ117_Handler
+  541 0000001A         IRQ118_Handler
+  542 0000001A         IRQ119_Handler
+  543 0000001A         IRQ120_Handler
+  544 0000001A         IRQ121_Handler
+  545 0000001A         IRQ122_Handler
+  546 0000001A         IRQ123_Handler
+  547 0000001A         IRQ124_Handler
+  548 0000001A         IRQ125_Handler
+  549 0000001A         IRQ126_Handler
+  550 0000001A         IRQ127_Handler
+  551 0000001A         IRQ128_Handler
+  552 0000001A         IRQ129_Handler
+  553 0000001A         IRQ130_Handler
+  554 0000001A         IRQ131_Handler
+  555 0000001A         IRQ132_Handler
+  556 0000001A         IRQ133_Handler
+  557 0000001A         IRQ134_Handler
+  558 0000001A         IRQ135_Handler
+  559 0000001A         IRQ136_Handler
+  560 0000001A         IRQ137_Handler
+  561 0000001A         IRQ138_Handler
+  562 0000001A         IRQ139_Handler
+  563 0000001A         IRQ140_Handler
+  564 0000001A         IRQ141_Handler
+  565 0000001A         IRQ142_Handler
+  566 0000001A         IRQ143_Handler
+  567 0000001A E7FE            B                .
+  568 0000001C                 ENDP
+  569 0000001C         
+  570 0000001C                 ALIGN
+  571 0000001C         
+  572 0000001C         
+  573 0000001C         ; User Initial Stack & Heap
+  574 0000001C         
+  575 0000001C                 IF               :DEF:__MICROLIB
+  576 0000001C         
+  577 0000001C                 EXPORT           __initial_sp
+  578 0000001C                 EXPORT           __heap_base
+
+
+
+ARM Macro Assembler    Page 14 
+
+
+  579 0000001C                 EXPORT           __heap_limit
+  580 0000001C         
+  581 0000001C                 ELSE
+  595                          ENDIF
+  596 0000001C         
+  597 0000001C         
+  598 0000001C                 END
+              00000000 
+              00000000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4 --apcs=interw
+ork --depend=.\output\debug\startup_hc32f4a0.d -o.\output\debug\startup_hc32f4a
+0.o -I"D:\3.Software installation path\Keil 5\Pack\HDSC\HC32F4A0\1.0.8\Device\I
+nclude" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 538
+" --list=.\output\debug\startup_hc32f4a0.lst ..\drivers\cmsis\Device\HDSC\hc32f
+4xx\Source\ARM\startup_hc32f4a0.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+STACK 00000000
+
+Symbol: STACK
+   Definitions
+      At line 26 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+   Uses
+      None
+Comment: STACK unused
+Stack_Mem 00000000
+
+Symbol: Stack_Mem
+   Definitions
+      At line 27 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+   Uses
+      None
+Comment: Stack_Mem unused
+__initial_sp 00002000
+
+Symbol: __initial_sp
+   Definitions
+      At line 28 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+   Uses
+      At line 51 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 577 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+HEAP 00000000
+
+Symbol: HEAP
+   Definitions
+      At line 36 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+   Uses
+      None
+Comment: HEAP unused
+Heap_Mem 00000000
+
+Symbol: Heap_Mem
+   Definitions
+      At line 38 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+   Uses
+      None
+Comment: Heap_Mem unused
+__heap_base 00000000
+
+Symbol: __heap_base
+   Definitions
+      At line 37 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+   Uses
+      At line 578 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+Comment: __heap_base used once
+__heap_limit 00002000
+
+Symbol: __heap_limit
+   Definitions
+      At line 39 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+   Uses
+      At line 579 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+Comment: __heap_limit used once
+4 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 46 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+   Uses
+      None
+Comment: RESET unused
+__Vectors 00000000
+
+Symbol: __Vectors
+   Definitions
+      At line 51 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+   Uses
+      At line 47 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 216 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+__Vectors_End 00000280
+
+Symbol: __Vectors_End
+   Definitions
+      At line 214 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 48 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 216 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+.text 00000000
+
+Symbol: .text
+   Definitions
+      At line 218 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      None
+Comment: .text unused
+BusFault_Handler 0000000E
+
+Symbol: BusFault_Handler
+   Definitions
+      At line 250 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 56 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 251 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+DebugMon_Handler 00000014
+
+Symbol: DebugMon_Handler
+   Definitions
+      At line 264 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 63 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 265 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+Default_Handler 0000001A
+
+Symbol: Default_Handler
+   Definitions
+      At line 277 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      None
+Comment: Default_Handler unused
+HardFault_Handler 0000000A
+
+Symbol: HardFault_Handler
+   Definitions
+      At line 240 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 54 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 241 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ000_Handler 0000001A
+
+Symbol: IRQ000_Handler
+   Definitions
+      At line 423 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+tup_hc32f4a0.s
+   Uses
+      At line 69 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 278 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ001_Handler 0000001A
+
+Symbol: IRQ001_Handler
+   Definitions
+      At line 424 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 70 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 279 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ002_Handler 0000001A
+
+Symbol: IRQ002_Handler
+   Definitions
+      At line 425 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 71 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 280 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ003_Handler 0000001A
+
+Symbol: IRQ003_Handler
+   Definitions
+      At line 426 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 72 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 281 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ004_Handler 0000001A
+
+Symbol: IRQ004_Handler
+   Definitions
+      At line 427 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 73 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 282 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ005_Handler 0000001A
+
+Symbol: IRQ005_Handler
+   Definitions
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 428 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 74 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 283 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ006_Handler 0000001A
+
+Symbol: IRQ006_Handler
+   Definitions
+      At line 429 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 75 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 284 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ007_Handler 0000001A
+
+Symbol: IRQ007_Handler
+   Definitions
+      At line 430 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 76 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 285 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ008_Handler 0000001A
+
+Symbol: IRQ008_Handler
+   Definitions
+      At line 431 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 77 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 286 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ009_Handler 0000001A
+
+Symbol: IRQ009_Handler
+   Definitions
+      At line 432 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 78 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 287 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ010_Handler 0000001A
+
+Symbol: IRQ010_Handler
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 433 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 79 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 288 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ011_Handler 0000001A
+
+Symbol: IRQ011_Handler
+   Definitions
+      At line 434 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 80 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 289 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ012_Handler 0000001A
+
+Symbol: IRQ012_Handler
+   Definitions
+      At line 435 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 81 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 290 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ013_Handler 0000001A
+
+Symbol: IRQ013_Handler
+   Definitions
+      At line 436 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 82 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 291 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ014_Handler 0000001A
+
+Symbol: IRQ014_Handler
+   Definitions
+      At line 437 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 83 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 292 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ015_Handler 0000001A
+
+
+
+
+ARM Macro Assembler    Page 5 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: IRQ015_Handler
+   Definitions
+      At line 438 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 84 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 293 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ016_Handler 0000001A
+
+Symbol: IRQ016_Handler
+   Definitions
+      At line 439 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 85 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 294 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ017_Handler 0000001A
+
+Symbol: IRQ017_Handler
+   Definitions
+      At line 440 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 86 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 295 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ018_Handler 0000001A
+
+Symbol: IRQ018_Handler
+   Definitions
+      At line 441 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 87 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 296 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ019_Handler 0000001A
+
+Symbol: IRQ019_Handler
+   Definitions
+      At line 442 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 88 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 297 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ020_Handler 0000001A
+
+
+
+ARM Macro Assembler    Page 6 Alphabetic symbol ordering
+Relocatable symbols
+
+
+Symbol: IRQ020_Handler
+   Definitions
+      At line 443 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 89 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 298 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ021_Handler 0000001A
+
+Symbol: IRQ021_Handler
+   Definitions
+      At line 444 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 90 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 299 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ022_Handler 0000001A
+
+Symbol: IRQ022_Handler
+   Definitions
+      At line 445 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 91 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 300 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ023_Handler 0000001A
+
+Symbol: IRQ023_Handler
+   Definitions
+      At line 446 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 92 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 301 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ024_Handler 0000001A
+
+Symbol: IRQ024_Handler
+   Definitions
+      At line 447 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 93 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 302 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+
+
+
+ARM Macro Assembler    Page 7 Alphabetic symbol ordering
+Relocatable symbols
+
+IRQ025_Handler 0000001A
+
+Symbol: IRQ025_Handler
+   Definitions
+      At line 448 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 94 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 303 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ026_Handler 0000001A
+
+Symbol: IRQ026_Handler
+   Definitions
+      At line 449 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 95 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 304 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ027_Handler 0000001A
+
+Symbol: IRQ027_Handler
+   Definitions
+      At line 450 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 96 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 305 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ028_Handler 0000001A
+
+Symbol: IRQ028_Handler
+   Definitions
+      At line 451 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 97 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 306 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ029_Handler 0000001A
+
+Symbol: IRQ029_Handler
+   Definitions
+      At line 452 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 98 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 307 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+
+
+ARM Macro Assembler    Page 8 Alphabetic symbol ordering
+Relocatable symbols
+
+
+IRQ030_Handler 0000001A
+
+Symbol: IRQ030_Handler
+   Definitions
+      At line 453 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 99 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 308 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ031_Handler 0000001A
+
+Symbol: IRQ031_Handler
+   Definitions
+      At line 454 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 100 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 309 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ032_Handler 0000001A
+
+Symbol: IRQ032_Handler
+   Definitions
+      At line 455 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 101 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 310 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ033_Handler 0000001A
+
+Symbol: IRQ033_Handler
+   Definitions
+      At line 456 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 102 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 311 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ034_Handler 0000001A
+
+Symbol: IRQ034_Handler
+   Definitions
+      At line 457 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 103 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 312 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+
+
+
+ARM Macro Assembler    Page 9 Alphabetic symbol ordering
+Relocatable symbols
+
+tup_hc32f4a0.s
+
+IRQ035_Handler 0000001A
+
+Symbol: IRQ035_Handler
+   Definitions
+      At line 458 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 104 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 313 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ036_Handler 0000001A
+
+Symbol: IRQ036_Handler
+   Definitions
+      At line 459 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 105 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 314 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ037_Handler 0000001A
+
+Symbol: IRQ037_Handler
+   Definitions
+      At line 460 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 106 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 315 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ038_Handler 0000001A
+
+Symbol: IRQ038_Handler
+   Definitions
+      At line 461 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 107 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 316 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ039_Handler 0000001A
+
+Symbol: IRQ039_Handler
+   Definitions
+      At line 462 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 108 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+
+
+ARM Macro Assembler    Page 10 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 317 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ040_Handler 0000001A
+
+Symbol: IRQ040_Handler
+   Definitions
+      At line 463 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 109 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 318 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ041_Handler 0000001A
+
+Symbol: IRQ041_Handler
+   Definitions
+      At line 464 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 110 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 319 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ042_Handler 0000001A
+
+Symbol: IRQ042_Handler
+   Definitions
+      At line 465 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 111 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 320 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ043_Handler 0000001A
+
+Symbol: IRQ043_Handler
+   Definitions
+      At line 466 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 112 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 321 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ044_Handler 0000001A
+
+Symbol: IRQ044_Handler
+   Definitions
+      At line 467 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 113 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+
+
+
+ARM Macro Assembler    Page 11 Alphabetic symbol ordering
+Relocatable symbols
+
+tup_hc32f4a0.s
+      At line 322 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ045_Handler 0000001A
+
+Symbol: IRQ045_Handler
+   Definitions
+      At line 468 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 114 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 323 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ046_Handler 0000001A
+
+Symbol: IRQ046_Handler
+   Definitions
+      At line 469 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 115 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 324 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ047_Handler 0000001A
+
+Symbol: IRQ047_Handler
+   Definitions
+      At line 470 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 116 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 325 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ048_Handler 0000001A
+
+Symbol: IRQ048_Handler
+   Definitions
+      At line 471 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 117 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 326 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ049_Handler 0000001A
+
+Symbol: IRQ049_Handler
+   Definitions
+      At line 472 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 12 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 118 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 327 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ050_Handler 0000001A
+
+Symbol: IRQ050_Handler
+   Definitions
+      At line 473 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 119 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 328 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ051_Handler 0000001A
+
+Symbol: IRQ051_Handler
+   Definitions
+      At line 474 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 120 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 329 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ052_Handler 0000001A
+
+Symbol: IRQ052_Handler
+   Definitions
+      At line 475 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 121 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 330 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ053_Handler 0000001A
+
+Symbol: IRQ053_Handler
+   Definitions
+      At line 476 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 122 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 331 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ054_Handler 0000001A
+
+Symbol: IRQ054_Handler
+   Definitions
+      At line 477 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+
+
+ARM Macro Assembler    Page 13 Alphabetic symbol ordering
+Relocatable symbols
+
+   Uses
+      At line 123 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 332 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ055_Handler 0000001A
+
+Symbol: IRQ055_Handler
+   Definitions
+      At line 478 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 124 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 333 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ056_Handler 0000001A
+
+Symbol: IRQ056_Handler
+   Definitions
+      At line 479 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 125 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 334 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ057_Handler 0000001A
+
+Symbol: IRQ057_Handler
+   Definitions
+      At line 480 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 126 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 335 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ058_Handler 0000001A
+
+Symbol: IRQ058_Handler
+   Definitions
+      At line 481 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 127 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 336 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ059_Handler 0000001A
+
+Symbol: IRQ059_Handler
+   Definitions
+      At line 482 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+
+
+
+ARM Macro Assembler    Page 14 Alphabetic symbol ordering
+Relocatable symbols
+
+tup_hc32f4a0.s
+   Uses
+      At line 128 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 337 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ060_Handler 0000001A
+
+Symbol: IRQ060_Handler
+   Definitions
+      At line 483 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 129 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 338 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ061_Handler 0000001A
+
+Symbol: IRQ061_Handler
+   Definitions
+      At line 484 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 130 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 339 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ062_Handler 0000001A
+
+Symbol: IRQ062_Handler
+   Definitions
+      At line 485 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 131 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 340 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ063_Handler 0000001A
+
+Symbol: IRQ063_Handler
+   Definitions
+      At line 486 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 132 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 341 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ064_Handler 0000001A
+
+Symbol: IRQ064_Handler
+   Definitions
+
+
+
+ARM Macro Assembler    Page 15 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 487 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 133 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 342 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ065_Handler 0000001A
+
+Symbol: IRQ065_Handler
+   Definitions
+      At line 488 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 134 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 343 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ066_Handler 0000001A
+
+Symbol: IRQ066_Handler
+   Definitions
+      At line 489 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 135 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 344 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ067_Handler 0000001A
+
+Symbol: IRQ067_Handler
+   Definitions
+      At line 490 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 136 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 345 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ068_Handler 0000001A
+
+Symbol: IRQ068_Handler
+   Definitions
+      At line 491 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 137 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 346 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ069_Handler 0000001A
+
+Symbol: IRQ069_Handler
+
+
+
+ARM Macro Assembler    Page 16 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 492 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 138 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 347 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ070_Handler 0000001A
+
+Symbol: IRQ070_Handler
+   Definitions
+      At line 493 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 139 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 348 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ071_Handler 0000001A
+
+Symbol: IRQ071_Handler
+   Definitions
+      At line 494 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 140 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 349 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ072_Handler 0000001A
+
+Symbol: IRQ072_Handler
+   Definitions
+      At line 495 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 141 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 350 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ073_Handler 0000001A
+
+Symbol: IRQ073_Handler
+   Definitions
+      At line 496 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 142 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 351 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ074_Handler 0000001A
+
+
+
+
+ARM Macro Assembler    Page 17 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: IRQ074_Handler
+   Definitions
+      At line 497 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 143 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 352 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ075_Handler 0000001A
+
+Symbol: IRQ075_Handler
+   Definitions
+      At line 498 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 144 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 353 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ076_Handler 0000001A
+
+Symbol: IRQ076_Handler
+   Definitions
+      At line 499 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 145 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 354 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ077_Handler 0000001A
+
+Symbol: IRQ077_Handler
+   Definitions
+      At line 500 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 146 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 355 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ078_Handler 0000001A
+
+Symbol: IRQ078_Handler
+   Definitions
+      At line 501 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 147 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 356 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ079_Handler 0000001A
+
+
+
+ARM Macro Assembler    Page 18 Alphabetic symbol ordering
+Relocatable symbols
+
+
+Symbol: IRQ079_Handler
+   Definitions
+      At line 502 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 148 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 357 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ080_Handler 0000001A
+
+Symbol: IRQ080_Handler
+   Definitions
+      At line 503 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 149 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 358 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ081_Handler 0000001A
+
+Symbol: IRQ081_Handler
+   Definitions
+      At line 504 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 150 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 359 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ082_Handler 0000001A
+
+Symbol: IRQ082_Handler
+   Definitions
+      At line 505 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 151 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 360 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ083_Handler 0000001A
+
+Symbol: IRQ083_Handler
+   Definitions
+      At line 506 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 152 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 361 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+
+
+
+ARM Macro Assembler    Page 19 Alphabetic symbol ordering
+Relocatable symbols
+
+IRQ084_Handler 0000001A
+
+Symbol: IRQ084_Handler
+   Definitions
+      At line 507 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 153 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 362 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ085_Handler 0000001A
+
+Symbol: IRQ085_Handler
+   Definitions
+      At line 508 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 154 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 363 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ086_Handler 0000001A
+
+Symbol: IRQ086_Handler
+   Definitions
+      At line 509 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 155 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 364 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ087_Handler 0000001A
+
+Symbol: IRQ087_Handler
+   Definitions
+      At line 510 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 156 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 365 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ088_Handler 0000001A
+
+Symbol: IRQ088_Handler
+   Definitions
+      At line 511 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 157 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 366 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+
+
+ARM Macro Assembler    Page 20 Alphabetic symbol ordering
+Relocatable symbols
+
+
+IRQ089_Handler 0000001A
+
+Symbol: IRQ089_Handler
+   Definitions
+      At line 512 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 158 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 367 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ090_Handler 0000001A
+
+Symbol: IRQ090_Handler
+   Definitions
+      At line 513 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 159 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 368 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ091_Handler 0000001A
+
+Symbol: IRQ091_Handler
+   Definitions
+      At line 514 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 160 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 369 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ092_Handler 0000001A
+
+Symbol: IRQ092_Handler
+   Definitions
+      At line 515 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 161 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 370 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ093_Handler 0000001A
+
+Symbol: IRQ093_Handler
+   Definitions
+      At line 516 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 162 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 371 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+
+
+
+ARM Macro Assembler    Page 21 Alphabetic symbol ordering
+Relocatable symbols
+
+tup_hc32f4a0.s
+
+IRQ094_Handler 0000001A
+
+Symbol: IRQ094_Handler
+   Definitions
+      At line 517 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 163 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 372 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ095_Handler 0000001A
+
+Symbol: IRQ095_Handler
+   Definitions
+      At line 518 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 164 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 373 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ096_Handler 0000001A
+
+Symbol: IRQ096_Handler
+   Definitions
+      At line 519 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 165 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 374 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ097_Handler 0000001A
+
+Symbol: IRQ097_Handler
+   Definitions
+      At line 520 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 166 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 375 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ098_Handler 0000001A
+
+Symbol: IRQ098_Handler
+   Definitions
+      At line 521 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 167 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+
+
+ARM Macro Assembler    Page 22 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 376 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ099_Handler 0000001A
+
+Symbol: IRQ099_Handler
+   Definitions
+      At line 522 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 168 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 377 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ100_Handler 0000001A
+
+Symbol: IRQ100_Handler
+   Definitions
+      At line 523 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 169 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 378 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ101_Handler 0000001A
+
+Symbol: IRQ101_Handler
+   Definitions
+      At line 524 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 170 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 379 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ102_Handler 0000001A
+
+Symbol: IRQ102_Handler
+   Definitions
+      At line 525 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 171 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 380 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ103_Handler 0000001A
+
+Symbol: IRQ103_Handler
+   Definitions
+      At line 526 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 172 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+
+
+
+ARM Macro Assembler    Page 23 Alphabetic symbol ordering
+Relocatable symbols
+
+tup_hc32f4a0.s
+      At line 381 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ104_Handler 0000001A
+
+Symbol: IRQ104_Handler
+   Definitions
+      At line 527 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 173 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 382 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ105_Handler 0000001A
+
+Symbol: IRQ105_Handler
+   Definitions
+      At line 528 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 174 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 383 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ106_Handler 0000001A
+
+Symbol: IRQ106_Handler
+   Definitions
+      At line 529 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 175 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 384 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ107_Handler 0000001A
+
+Symbol: IRQ107_Handler
+   Definitions
+      At line 530 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 176 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 385 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ108_Handler 0000001A
+
+Symbol: IRQ108_Handler
+   Definitions
+      At line 531 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 24 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 177 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 386 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ109_Handler 0000001A
+
+Symbol: IRQ109_Handler
+   Definitions
+      At line 532 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 178 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 387 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ110_Handler 0000001A
+
+Symbol: IRQ110_Handler
+   Definitions
+      At line 533 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 179 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 388 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ111_Handler 0000001A
+
+Symbol: IRQ111_Handler
+   Definitions
+      At line 534 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 180 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 389 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ112_Handler 0000001A
+
+Symbol: IRQ112_Handler
+   Definitions
+      At line 535 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 181 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 390 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ113_Handler 0000001A
+
+Symbol: IRQ113_Handler
+   Definitions
+      At line 536 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+
+
+ARM Macro Assembler    Page 25 Alphabetic symbol ordering
+Relocatable symbols
+
+   Uses
+      At line 182 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 391 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ114_Handler 0000001A
+
+Symbol: IRQ114_Handler
+   Definitions
+      At line 537 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 183 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 392 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ115_Handler 0000001A
+
+Symbol: IRQ115_Handler
+   Definitions
+      At line 538 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 184 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 393 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ116_Handler 0000001A
+
+Symbol: IRQ116_Handler
+   Definitions
+      At line 539 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 185 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 394 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ117_Handler 0000001A
+
+Symbol: IRQ117_Handler
+   Definitions
+      At line 540 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 186 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 395 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ118_Handler 0000001A
+
+Symbol: IRQ118_Handler
+   Definitions
+      At line 541 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+
+
+
+ARM Macro Assembler    Page 26 Alphabetic symbol ordering
+Relocatable symbols
+
+tup_hc32f4a0.s
+   Uses
+      At line 187 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 396 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ119_Handler 0000001A
+
+Symbol: IRQ119_Handler
+   Definitions
+      At line 542 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 188 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 397 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ120_Handler 0000001A
+
+Symbol: IRQ120_Handler
+   Definitions
+      At line 543 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 189 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 398 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ121_Handler 0000001A
+
+Symbol: IRQ121_Handler
+   Definitions
+      At line 544 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 190 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 399 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ122_Handler 0000001A
+
+Symbol: IRQ122_Handler
+   Definitions
+      At line 545 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 191 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 400 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ123_Handler 0000001A
+
+Symbol: IRQ123_Handler
+   Definitions
+
+
+
+ARM Macro Assembler    Page 27 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 546 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 192 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 401 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ124_Handler 0000001A
+
+Symbol: IRQ124_Handler
+   Definitions
+      At line 547 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 193 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 402 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ125_Handler 0000001A
+
+Symbol: IRQ125_Handler
+   Definitions
+      At line 548 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 194 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 403 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ126_Handler 0000001A
+
+Symbol: IRQ126_Handler
+   Definitions
+      At line 549 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 195 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 404 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ127_Handler 0000001A
+
+Symbol: IRQ127_Handler
+   Definitions
+      At line 550 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 196 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 405 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ128_Handler 0000001A
+
+Symbol: IRQ128_Handler
+
+
+
+ARM Macro Assembler    Page 28 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 551 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 197 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 406 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ129_Handler 0000001A
+
+Symbol: IRQ129_Handler
+   Definitions
+      At line 552 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 198 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 407 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ130_Handler 0000001A
+
+Symbol: IRQ130_Handler
+   Definitions
+      At line 553 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 199 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 408 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ131_Handler 0000001A
+
+Symbol: IRQ131_Handler
+   Definitions
+      At line 554 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 200 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 409 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ132_Handler 0000001A
+
+Symbol: IRQ132_Handler
+   Definitions
+      At line 555 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 201 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 410 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ133_Handler 0000001A
+
+
+
+
+ARM Macro Assembler    Page 29 Alphabetic symbol ordering
+Relocatable symbols
+
+Symbol: IRQ133_Handler
+   Definitions
+      At line 556 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 202 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 411 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ134_Handler 0000001A
+
+Symbol: IRQ134_Handler
+   Definitions
+      At line 557 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 203 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 412 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ135_Handler 0000001A
+
+Symbol: IRQ135_Handler
+   Definitions
+      At line 558 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 204 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 413 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ136_Handler 0000001A
+
+Symbol: IRQ136_Handler
+   Definitions
+      At line 559 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 205 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 414 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ137_Handler 0000001A
+
+Symbol: IRQ137_Handler
+   Definitions
+      At line 560 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 206 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 415 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ138_Handler 0000001A
+
+
+
+ARM Macro Assembler    Page 30 Alphabetic symbol ordering
+Relocatable symbols
+
+
+Symbol: IRQ138_Handler
+   Definitions
+      At line 561 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 207 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 416 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ139_Handler 0000001A
+
+Symbol: IRQ139_Handler
+   Definitions
+      At line 562 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 208 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 417 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ140_Handler 0000001A
+
+Symbol: IRQ140_Handler
+   Definitions
+      At line 563 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 209 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 418 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ141_Handler 0000001A
+
+Symbol: IRQ141_Handler
+   Definitions
+      At line 564 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 210 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 419 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+IRQ142_Handler 0000001A
+
+Symbol: IRQ142_Handler
+   Definitions
+      At line 565 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 211 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 420 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+
+
+
+ARM Macro Assembler    Page 31 Alphabetic symbol ordering
+Relocatable symbols
+
+IRQ143_Handler 0000001A
+
+Symbol: IRQ143_Handler
+   Definitions
+      At line 566 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 212 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+      At line 421 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+MemManage_Handler 0000000C
+
+Symbol: MemManage_Handler
+   Definitions
+      At line 245 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 55 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 246 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+NMI_Handler 00000008
+
+Symbol: NMI_Handler
+   Definitions
+      At line 235 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 53 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 236 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+PendSV_Handler 00000016
+
+Symbol: PendSV_Handler
+   Definitions
+      At line 268 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 65 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 269 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+Reset_Handler 00000000
+
+Symbol: Reset_Handler
+   Definitions
+      At line 222 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 52 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 223 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+
+
+ARM Macro Assembler    Page 32 Alphabetic symbol ordering
+Relocatable symbols
+
+
+SVC_Handler 00000012
+
+Symbol: SVC_Handler
+   Definitions
+      At line 259 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 62 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 260 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+SysTick_Handler 00000018
+
+Symbol: SysTick_Handler
+   Definitions
+      At line 272 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 66 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 273 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+UsageFault_Handler 00000010
+
+Symbol: UsageFault_Handler
+   Definitions
+      At line 255 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 57 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+      At line 256 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+
+156 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+Heap_Size 00002000
+
+Symbol: Heap_Size
+   Definitions
+      At line 34 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+   Uses
+      At line 38 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+Comment: Heap_Size used once
+Stack_Size 00002000
+
+Symbol: Stack_Size
+   Definitions
+      At line 24 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+   Uses
+      At line 27 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+Comment: Stack_Size used once
+__Vectors_Size 00000280
+
+Symbol: __Vectors_Size
+   Definitions
+      At line 216 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 49 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\start
+up_hc32f4a0.s
+Comment: __Vectors_Size used once
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+External symbols
+
+SystemInit 00000000
+
+Symbol: SystemInit
+   Definitions
+      At line 224 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 227 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+Comment: SystemInit used once
+__main 00000000
+
+Symbol: __main
+   Definitions
+      At line 225 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+   Uses
+      At line 229 in file ..\drivers\cmsis\Device\HDSC\hc32f4xx\Source\ARM\star
+tup_hc32f4a0.s
+Comment: __main used once
+2 symbols
+505 symbols in table
